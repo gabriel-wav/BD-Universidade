@@ -1,0 +1,140 @@
+NORMAS DE BANCO DE DADOS
+
+1FN
+Uma tabela está na 1 forma normal quando
+
+> existe uma chave primária
+> somente possui valores atômicos (contêm um valor indivisível) 
+
+exemplo: 
+Marta Santos (Juntos): Não atômico - pode ser dividido em partes significativas ('Marta', 'Santos')
+Marta (Separado): Atômico - representa uma única unidade de informação ('Marta')
+Santos (Separado): Atômico - representa uma única unidade de informação ('Santos')
+
+-------------------
+
+> Relação não possui atributos multivalorados ou aninhados (Em vez de ter vários dados em um campo, você pode ter um conjunto de valores associados a ele)
+
+exemplo: 
+Telefones de uma pessoa: Uma pessoa pode ter vários números de telefone: celular pessoal, celular do trabalho, telefone fixo.
+
+------------------
+
+> Relação não possui atributos compostos(atributos compostos são um tipo de atributo que pode ser dividido em subatributos menores, cada um com seu próprio significado)
+
+exemplo:
+Endereço
+> Rua
+> Numero
+> Bairro
+> Cidade
+> Estado
+> CEP
+
+------------------
+
+A tabela tem 3 campos:
+
+Uma chave primária;
+O campo cod_departamento é um valor atômico, não é multivalorado (não tem vários dados em um campo) e não é composto.
+O campo nome_departamento é um valor atômico, ou seja, (o nome é único para cada departamento) não é multivalorado (não tem vários nomes distintos) e não é composto.
+O campo cod_professor é um valor atômico, não é multivalorado (não tem vários dados em um campo) e não é composto.
+
+
+1ª Forma Normal (1FN) – Resumo
+Uma tabela está na 1FN quando:
+
+Tem uma chave primária definida (identificador único para cada registro).
+
+Todos os valores são atômicos (indivisíveis do ponto de vista do banco de dados).
+
+Não há atributos multivalorados (um campo não armazena múltiplos valores em uma única célula).
+
+Não há atributos compostos (um campo não pode ser dividido em subpartes com significado independente).
+
+Exemplos Revisados
+✅ Valores Atômicos vs. Não Atômicos
+Não atômico: "Marta Santos" (pode ser dividido em nome e sobrenome).
+Solução: Separar em nome e sobrenome.
+
+Atômico: "Marta" e "Santos" (valores indivisíveis).
+
+✅ Atributos Multivalorados
+Problema: Um campo telefones com valores como "Cel: (11) 9999-9999, Trab: (11) 8888-8888".
+Solução: Criar uma tabela separada para telefones, relacionada à tabela principal (ex: pessoa_telefone).
+
+✅ Atributos Compostos
+Problema: Um campo endereco com "Av. Brasil, 100, Centro, São Paulo-SP, 01000-000".
+Solução: Dividir em campos individuais (rua, numero, bairro, cidade, estado, cep).
+
+Exemplo de Tabela na 1FN
+id_departamento (PK)	nome_departamento	cod_professor
+1	                       TI	             101
+2	                       RH	             102
+Verificação:
+
+Todos os campos são atômicos.
+
+Não há multivalores ou composição.
+
+Chave primária (id_departamento) está definida.
+
+---------------------------------------------------- X -------------------------------------------------------
+
+2FN 
+
+> Está na 1FN
+> Todos os atributos não-chave são funcionalmente dependentes de todas as partes da chave primária. (Qualquer atributo da tabela que não seja uma chave PK ou FK, tem que ser dependente funcionalmente da chave primária)
+> Não existem dependências parciais, e atributos não dependem de chaves candidatas. (Significa que todos os atributos não-chave dependem da chave primária completa)
+> Caso contrário, deve-se gerar uma nova tabela com os dados. (Ou seja, se você localizar na análise das tabelas atributos que não seja funcionalmente dependentes da PK, você deve levar em esses atributos para a nova tabela)
+> Um atributo-chave é um que é uma PK ou parte de uma PK composta.
+
+
+Exemplo de Tabela
+RA_Aluno (PK)	nome_aluno	cod_disciplina (PK)	nome disciplina		nota
+555		Juliana		BD01			Banco de dados		8.5
+555		Juliana		PT01			Programação Python	7.0
+
+A chave primária é composta: (RA_Aluno, Código_Disciplina)
+Nome_Aluno (Depende do RA_Aluno) e Nome_Disciplina (Depende do Código_Disciplina) então, dependem só de parte da chave, não da chave completa.
+
+Para chegar na FN2
+
+É preciso deparar essas dependências parciais em outras tabelas. como
+Aluno (RA_aluno, nome_aluno)
+Disciplina (cod_disciplina, nome_disciplina)
+Notas (RA_aluno, cod_disiciplina, nota)
+ 
+
+---------------------------------------------------- X -------------------------------------------------------
+
+3FN
+
+Uma tabela está na 3FN
+
+> Estiver na 2FN
+> Não existir dependências transitivas (Não existirem dependências transitiva: (ou seja, os atributos
+depender somente da chave primária e de mais nada.)
+> Caso contrário, deve-se gerar uma nova tabela com os dados.
+
+Exemplo de Tabela Aluno que (não está na 3FN):
+
+
+
+RA 	Nome		Data_Nascimento		Curso			Nome_Coordenador
+
+
+1001 	João Silva	2000-05-10		Engenharia		Prof. Carlos
+
+1002 	Maria Souza	1999-08-23		Medicina		Prof. Ana
+
+1003 	Lucas Alves	2001-02-15 		Engenharia		Prof. Carlos
+
+
+Problemas de redundância:
+Redundância: O nome do coordenador se repete para cada aluno do mesmo
+curso.
+
+Nome_Coordenador depende de Curso, que depende de RA.
+Isso viola a 3FN, pois Nome Coordenador não depende diretamente da
+chave primária, e sim de outro atributo (Curso).
