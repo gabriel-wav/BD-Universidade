@@ -1,0 +1,222 @@
+banco de dados universidade São Gabriel
+
+Entidades:
+
+alunos
+disciplinas
+cursos
+professores
+turmas
+histórico escolar
+departamento
+
+---------------------------------------------------------------------
+
+Relacionamentos:
+
+aluno pode estar matriculado no curso
+disciplina pertence ao curso
+aluno cursa disciplina
+aluno possui histórico escolar
+as disciplinas pertencem a departamentos específicos
+professores podem não lecionar disciplinas
+professor é vinculado a um departamento
+departamento controla curso
+disciplina depende de disciplinas
+
+
+curso > disciplina > aluno > histórico escolar > disciplina
+
+curso > turma > alunos
+
+professores > turma
+
+departamento > professores > disciplinas
+
+departamento > disciplinas
+
+departamento > curso
+
+disciplina > disciplina
+
+---------------------------------------------------------------------
+Atributos:
+
+-- Aluno --
+ra primary key
+nome
+sobrenome
+endereço - atributo composto
+  > rua
+  > número
+  > bairro e cep
+  > cidade
+  > estado
+código do curso
+telefone 
+status
+filiação
+gênero
+contato
+cod_turma
+cpf
+
+CREATE TABLE Alunos(
+ra INT PRIMARY KEY UNIQUE,
+nome VARCHAR (50),
+sobrenome VARCHAR (100),
+endereco 
+
+cod_curso INT FK UNIQUE REFERENCES FROM CURSO(id_curso),
+telefone VARCHAR (20),
+status 
+filiação VARCHAR (100),
+gênero ENUM (F, M ,O),
+comtato VARCHAR (50),
+cod_turma 
+cpf CHAR (11),
+)
+
+--- ---
+
+-- Professor --
+código do professor
+nome professor
+sobrenome professor
+genero
+cod_departamento
+status
+telefone
+email
+endereço - atributo composto
+  > rua
+  > número
+  > bairro e cep
+  > cidade
+  > estado
+
+--- ---
+
+-- Curso --
+cod_curso
+nome curso
+cod_departamento
+disciplinas
+duração de semestres
+
+id_curso INT PRIMARY KEY UNIQUE,
+nome curso VARCHAR(100),
+disciplina VARCHAR(100) FOREIGN_KEY REFERENCES FROM DISCIPLINAS(),
+sala VARCHAR(20),
+--- ---
+
+-- Departamento --
+cod_departamento
+nome departamento
+
+--- ---
+
+-- Disciplina --
+cod_disciplina
+nome disciplina
+descrição
+cod_departamento
+num alunos
+carga horária
+
+--- ---
+
+-- Histórico --
+cod_historico
+cod_disciplina
+RA
+notas
+média
+frequência
+período_realização
+--- ---
+
+-- Turma --
+nome turma
+cod_curso
+cod_turma
+cod_disciplina
+salas
+nome aluno
+sobrenome aluno
+nome prof
+sobrenome prof
+período do dia
+num alunos
+data_inicio
+data_fim
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------
+
+Regras:
+
+>1 um aluno só pode estar matriculado em um curso por vez
+
+>2 alunos possuem um código de identificação (RA), padrão pode ser letra número ou misturado
+
+>3 cursos são compostos por várias disciplinas
+
+>4 cada disciplina terá no máximo 28 alunos por turma
+
+>5 as disciplinas podem ser obrigatórias ou optativas dependendo do curso
+
+>6 as disciplinas pertencem a departamento específicos
+
+>7 cada disciplina possui um código de identificação (sem padrão ainda)
+
+>8 alunos podem trancar matrícula, não estando então matriculados em nenhuma disciplina no semestre (se o aluno trancar a matricula não pode estar matriculado em nenhuma disciplina)
+
+>9 em cada semestre, cada aluno pode se matricular em no máximo 8 disciplinas (se ficar de DP em varias disciplinas e ultrapassar as 8 disciplinas precisará fazer no próximo semestre)
+
+>10 o aluno só pode ser reprovado no máximo 3 vezes na mesma disciplina
+(se o aluno reprovar mais de 3 vezes na mesma disciplina ele perde o curso)
+
+>11 a universidade terá no máximo 2000 alunos matriculados simultaneamente em 8 cursos distintos
+
+>12 entram 200 alunos novos por ano(seja por vestibular ou transferência)
+
+>13 existem 64 disciplinas no total disponíveis
+
+>14 um histórico escolar traz todas as disciplinas cursadas por um aluno, incluindo nota final, frequência e período do curso realizado
+
+>15 professores podem ser cadastrados mesmo sem lecionar disciplinas (isso evita que um professor não possa lecionar uma determinada disciplina no futuro)
+
+>16 existem 30 professores trabalhando na escola
+
+>17 cada professor irá lecionar no máximo 3 disciplinas diferentes
+
+>18 cada professor é vinculado a um departamento 
+
+(A vinculação de cada professor a um departamento é fundamental para a organização, gestão, e desenvolvimento das atividades acadêmicas em uma universidade.
+
+Troca de conhecimentos: a vinculação a um departamento promove a troca de conhecimentos e experiências entre os professores, o que pode levar a novas ideias e projetos de pesquisa.)
+
+>19 professores são identificados por um código de professor (não foi definido o padrão)
+
+_____________________________________________________________________
+
+entidades geralmente se repetem muito nas regras dos negócios
+
+podem haver mudanças nas regras do negocio pois o cliente pode deixar passar informações ou não dar relevância pra mesma
+
+fazer passo a passo sem se precipitar, focar no objetivo 
+
+levantar os relacionamentos com base nas regras do negócio
+
+
+
+
+
