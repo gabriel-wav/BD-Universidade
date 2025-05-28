@@ -1,0 +1,66 @@
+╔══════════════════════════════════════════════════════╗
+║        REGRAS DO NEGÓCIO - SISTEMA ACADÊMICO         ║
+╚══════════════════════════════════════════════════════╝
+
+  1. Um aluno só pode estar matriculado em **um curso por vez**.
+
+  2. Cada aluno possui um **RA (Registro Acadêmico)** como código de identificação.
+     → Pode conter letras, números ou ambos.
+
+  3. Cada curso é composto por **várias disciplinas**.
+
+  4. Cada disciplina comporta **no máximo 28 alunos por turma**.
+
+  5. As disciplinas podem ser:
+     → **Obrigatórias** ou  
+     → **Optativas**, dependendo do curso.
+
+  6. Cada disciplina pertence a um **departamento específico**.
+
+  7. Cada disciplina possui um **código de identificação** (sem padrão definido ainda).
+
+  8. Alunos podem **trancar matrícula**.
+     → Nesse caso, **não podem se matricular em nenhuma disciplina** no semestre.
+
+  9. Cada aluno pode se matricular em **no máximo 8 disciplinas por semestre**.
+     → Caso ultrapasse por causa de DPs, cursará o excedente no próximo semestre.
+
+ 10. Um aluno pode ser **reprovado no máximo 3 vezes na mesma disciplina**.
+     → Se ultrapassar, será **desligado do curso**.
+
+ 11. A universidade comporta até **2000 alunos matriculados simultaneamente** 
+     em **8 cursos distintos**.
+
+ 12. São aceitos **200 alunos novos por ano** (via vestibular ou transferência).
+
+ 13. Existem **64 disciplinas disponíveis no total**.
+
+ 14. O **histórico escolar** de um aluno inclui:
+     • Disciplinas cursadas  
+     • Nota final  
+     • Frequência  
+     • Período do curso
+
+ 15. Professores podem ser **cadastrados mesmo sem lecionar no momento**.
+     → Isso permite alocação futura em disciplinas.
+
+ 16. Existem **30 professores ativos** na instituição.
+
+ 17. Cada professor pode lecionar em **até 3 disciplinas diferentes**.
+
+ 18. Cada professor é vinculado a **um departamento**.
+     → Essencial para a organização acadêmica, gestão e produção de conhecimento.
+     → Estimula trocas de experiências, ideias e pesquisas.
+
+ 19. Professores são identificados por um **código de professor** (formato ainda não definido).
+
+─────────────────────────────────────────────────────────────
+
+OBSERVAÇÕES IMPORTANTES:
+
+• Entidades importantes se repetem nas regras do negócio (ex: aluno, curso, disciplina, professor).
+• Regras do negócio estão sujeitas a mudanças conforme novas informações do cliente.
+• É essencial seguir passo a passo, sem precipitação, sempre focando no objetivo.
+• Os relacionamentos entre entidades devem ser levantados com base nessas regras.
+
+─────────────────────────────────────────────────────────────

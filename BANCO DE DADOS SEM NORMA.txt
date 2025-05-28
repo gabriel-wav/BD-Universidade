@@ -1,0 +1,158 @@
+
+UNIVERSIDADE SAINT GABRIEL — BANCO DE DADOS SEM NORMALIZAÇÃO
+============================================================
+
+ENTIDADES
+---------
+- Alunos
+- Disciplinas
+- Cursos
+- Professores
+- Turmas
+- Histórico Escolar
+- Departamento
+
+RELACIONAMENTOS
+---------------
+- Aluno pode estar matriculado no curso
+- Disciplina pertence ao curso
+- Aluno cursa disciplina
+- Aluno possui histórico escolar
+- Disciplinas pertencem a departamentos específicos
+- Professores podem não lecionar disciplinas
+- Professor é vinculado a um departamento
+- Departamento controla curso
+- Disciplina depende de disciplinas
+
+Cadeias de relacionamento:
+- Curso > Disciplina > Aluno > Histórico Escolar > Disciplina
+- Curso > Turma > Alunos
+- Professores > Turma
+- Departamento > Professores > Disciplinas
+- Departamento > Disciplinas
+- Departamento > Curso
+- Disciplina > Disciplina
+
+SCRIPT SQL
+----------
+CREATE DATABASE UniversidadeSaoGabriel;
+USE UniversidadeSaoGabriel;
+
+GO
+
+CREATE TABLE Alunos (
+  RA_aluno INT PRIMARY KEY AUTO_INCREMENT,
+  nome_aluno VARCHAR(50) NOT NULL,
+  sobrenome_aluno VARCHAR(100) NOT NULL,
+  data_nascimento DATE NOT NULL,
+  genero ENUM('M', 'F', 'O'),  
+  CPF CHAR(11) UNIQUE NOT NULL,  
+  RG VARCHAR(15) UNIQUE,  
+  rua VARCHAR(100) NOT NULL,
+  numero_residencial VARCHAR(10) NOT NULL, 
+  bairro VARCHAR(50) NOT NULL,
+  cidade VARCHAR(50) NOT NULL,
+  estado CHAR(2) NOT NULL,
+  CEP CHAR(8) NOT NULL,
+  telefone_celular VARCHAR(20) NOT NULL,
+  telefone_residencial VARCHAR(20),
+  telefone_comercial VARCHAR(20),
+  telefone_recado VARCHAR(20),
+  email_pessoal VARCHAR(60) NOT NULL,
+  email_corporativo VARCHAR(60),
+  status_aluno ENUM ('ativo', 'formado', 'trancado', 'transferido') NOT NULL,
+  data_ingresso DATE NOT NULL,
+  deficiencia ENUM ('S', 'N') NOT NULL, 
+  tipo_deficiencia VARCHAR(100),
+  nome_mae VARCHAR(100),
+  nome_pai VARCHAR(100)
+);
+
+CREATE TABLE Professor (
+  cod_professor INT PRIMARY KEY UNIQUE AUTO_INCREMENT,
+  nome_professor VARCHAR(50) NOT NULL,
+  sobrenome_professor VARCHAR(100) NOT NULL,
+  data_nascimento DATE NOT NULL,
+  identificacao_genero ENUM ('M', 'F', 'O'),
+  data_contratação DATE NOT NULL,
+  tipo_vinculo VARCHAR(50) NOT NULL,
+  CPF VARCHAR(14) UNIQUE NOT NULL,  
+  RG VARCHAR(20) UNIQUE, 
+  titulação ENUM ('graduado', 'mestre', 'doutor'),
+  rua VARCHAR(100) NOT NULL,
+  número_residencial VARCHAR(10) NOT NULL,
+  bairro VARCHAR(50) NOT NULL,
+  cidade VARCHAR(50) NOT NULL,
+  estado CHAR(2) NOT NULL,
+  CEP CHAR(8) NOT NULL,
+  telefone_celular VARCHAR(20),
+  telefone_residencial VARCHAR(20),
+  telefone_comercial VARCHAR(20),
+  telefone_recado VARCHAR(20),
+  email_pessoal VARCHAR(60),
+  email_corporativo VARCHAR(60),
+  FOREIGN KEY (cod_departamento) REFERENCES Departamento (cod_departamento),
+  status_professor ENUM ('ativo', 'inativo', 'licenciado')
+);
+
+CREATE TABLE Curso (
+  cod_curso INT PRIMARY KEY UNIQUE AUTO_INCREMENT,
+  nome_curso VARCHAR(60),
+  tipo ENUM ('bacharelado', 'licenciatura', 'tecnólogo'),
+  duracao_meses INT,
+  cod_departamento INT AUTO_INCREMENT,
+  turno ENUM ('matutino', 'vespertino', 'noturno'),
+  carga_horaria_total INT,
+  modalidade ENUM ('presencial', 'semi-presencial', 'EAD'),
+  cod_prof_coordenador FOREIGN KEY -- ATENÇÃO
+);
+
+CREATE TABLE Departamento (
+  cod_departamento INT PRIMARY KEY UNIQUE IDENTITY,
+  nome_departamento VARCHAR(100),
+  cod_professor FOREIGN KEY -- ATENÇÃO
+);
+
+CREATE TABLE Disciplina(
+  cod_disciplina INT PRIMARY KEY UNIQUE AUTO_INCREMENT,
+  nome_disciplina VARCHAR(30),
+  pre_requisitos VARCHAR(100),
+  ementa VARCHAR(150),
+  FOREIGN KEY (cod_departamento) REFERENCES Departamento (cod_departamento),
+  carga_horaria INT,
+  FOREIGN KEY (cod_curso) REFERENCES Turma (cod_turma)
+);
+
+CREATE TABLE Historico (
+  cod_historico INT PRIMARY KEY UNIQUE AUTO_INCREMENT,
+  FOREIGN KEY cod_disciplina REFERENCES Disciplina (cod_disciplina),
+  FOREIGN KEY RA_Aluno REFERENCES Alunos (RA_Aluno),
+  ano YEAR,
+  semestre INT,
+  nota FLOAT,
+  frequencia FLOAT,
+  situacao ENUM ('aprovado', 'reprovado', 'trancado')
+);
+
+CREATE TABLE Turma (
+  cod_turma INT PRIMARY KEY UNIQUE AUTO_INCREMENT,
+  cod_curso INT,
+  sala VARCHAR(20),
+  ano YEAR,
+  semestre INT,
+  FOREIGN KEY cod_disciplina REFERENCES Disciplina (cod_disciplina),
+  FOREIGN KEY cod_professor REFERENCES Professor (cod_professor),
+  periodo INT,
+  num_alunos INT,
+  data_inicio DATE,
+  data_fim DATE
+);
+
+CREATE TABLE Matricula (
+  cod_matricula INT PRIMARY KEY UNIQUE AUTO_INCREMENT,
+  FOREIGN KEY RA_Aluno REFERENCES Alunos (RA_Aluno),
+  FOREIGN KEY cod_turma REFERENCES Turma (cod_turma),
+  data_matricula DATE,
+  data_cancelamento DATE,
+  status_matricula ENUM ('ativa', 'cancelada', 'trancada')
+);
